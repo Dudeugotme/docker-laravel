@@ -1,30 +1,26 @@
-# ------------------------------------------------------------------------------
-# Docker provisioning script for the docker-laravel web server stack
-#
-# 	e.g. docker build -t mtmacdonald/docker-laravel:version .
-# ------------------------------------------------------------------------------
+## BUILDING
+##   (from project root directory)
+##   $ docker build -t redis-for-dudeugotme-docker-laravel .
+##
+## RUNNING
+##   $ docker run -p 6379:6379 redis-for-dudeugotme-docker-laravel
+##
+## CONNECTING
+##   Lookup the IP of your active docker host using:
+##     $ docker-machine ip $(docker-machine active)
+##   Connect to the container at DOCKER_IP:6379
+##     replacing DOCKER_IP for the IP of your active docker host
+##
+## NOTES
+##   This is a prebuilt version of Redis.
+##   For more information and documentation visit:
+##     https://github.com/bitnami/bitnami-docker-redis
 
-# ------------------------------------------------------------------------------
-# Start with a base image
-# ------------------------------------------------------------------------------
+FROM gcr.io/bitnami-containers/redis:3.2.8-r0
 
-FROM mtmacdonald/docker-base:1.1.2
+ENV STACKSMITH_STACK_ID="r7k7kwa" \
+    STACKSMITH_STACK_NAME="Redis for Dudeugotme/docker-laravel" \
+    STACKSMITH_STACK_PRIVATE="1" \
+    BITNAMI_CONTAINER_ORIGIN="stacksmith"
 
-MAINTAINER Mark Macdonald <mark.t.macdonald@googlemail.com>
-
-# Use Supervisor to run and manage all other services
-CMD ["supervisord", "-c", "/etc/supervisord.conf"]
-
-# ------------------------------------------------------------------------------
-# Provision the server
-# ------------------------------------------------------------------------------
-
-RUN mkdir /provision
-ADD provision /provision
-RUN /provision/provision.sh
-
-# ------------------------------------------------------------------------------
-# Clean up
-# ------------------------------------------------------------------------------
-
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+## STACKSMITH-END: Modifications below this line will be unchanged when regenerating
